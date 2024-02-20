@@ -2,6 +2,7 @@ import * as THREE from "three";
 import Experience from "../Experience.js";
 import GSAP from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger.js";
+import ASScroll from "@ashthornton/asscroll";
 
 export default class Controls {
     constructor() {
@@ -19,11 +20,11 @@ export default class Controls {
         // this.progress = 0;
         // this.dummyCurve = new THREE.Vector3(0, 0, 0);
 
-        this.lerp = {
-            current: 0,
-            target: 0,
-            ease: 0.1,
-        }
+        // this.lerp = {
+        //     current: 0,
+        //     target: 0,
+        //     ease: 0.1,
+        // }
 
         // this.position = new THREE.Vector3(0, 0, 0);
         // this.lookAtPosition = new THREE.Vector3(0, 0, 0);
@@ -34,7 +35,57 @@ export default class Controls {
 
         // this.setPath();
         // this.onWheel();
+        this.setSmoothScroll();
         this.setScrollTrigger();
+    }
+
+    setupASScroll() {
+        // https://github.com/ashthornton/asscroll
+        const asscroll = new ASScroll({
+            ease: 0.1,
+            disableRaf: true,
+        });
+
+        GSAP.ticker.add(asscroll.update);
+
+        ScrollTrigger.defaults({
+            scroller: asscroll.containerElement,
+        });
+
+        ScrollTrigger.scrollerProxy(asscroll.containerElement, {
+            scrollTop(value) {
+                if (arguments.length) {
+                    asscroll.currentPos = value;
+                    return;
+                }
+                return asscroll.currentPos;
+            },
+            getBoundingClientRect() {
+                return {
+                    top: 0,
+                    left: 0,
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                };
+            },
+            fixedMarkers: true,
+        });
+
+        asscroll.on("update", ScrollTrigger.update);
+        ScrollTrigger.addEventListener("refresh", asscroll.resize);
+
+        requestAnimationFrame(() => {
+            asscroll.enable({
+                newScrollElements: document.querySelectorAll(
+                    ".gsap-marker-start, .gsap-marker-end, [asscroll]"
+                ),
+            });
+        });
+        return asscroll;
+    }
+    
+    setSmoothScroll() {
+        this.asscroll = this.setupASScroll();
     }
 
     // setPath() {
@@ -80,7 +131,7 @@ export default class Controls {
                         start: "top top",
                         end: "bottom bottom",
                         scrub: 0.6,
-                        markers: true,
+                        // markers: true,
                         invalidateOnRefresh: true,
                     }
                 });
@@ -95,7 +146,7 @@ export default class Controls {
                         start: "top top",
                         end: "bottom bottom",
                         scrub: 0.6,
-                        markers: true,
+                        // markers: true,
                         invalidateOnRefresh: true,
                     }
                 });
@@ -123,7 +174,7 @@ export default class Controls {
                         start: "top top",
                         end: "bottom bottom",
                         scrub: 0.6,
-                        markers: true,
+                        // markers: true,
                         invalidateOnRefresh: true,
                     }
                 }).to(this.camera.orthographicCamera.position, {
@@ -155,7 +206,7 @@ export default class Controls {
                         start: "top top",
                         end: "bottom bottom",
                         scrub: 0.6,
-                        markers: true,
+                        // markers: true,
                         invalidateOnRefresh: true,
                     }
                 }).to(this.room.scale, {
@@ -171,7 +222,7 @@ export default class Controls {
                         start: "top top",
                         end: "bottom bottom",
                         scrub: 0.6,
-                        markers: true,
+                        // markers: true,
                         invalidateOnRefresh: true,
                     }
                 }).to(this.room.scale, {
@@ -187,7 +238,7 @@ export default class Controls {
                         start: "top top",
                         end: "bottom bottom",
                         scrub: 0.6,
-                        markers: true,
+                        // markers: true,
                         invalidateOnRefresh: true,
                     }
                 }).to(this.camera.orthographicCamera.position, {
@@ -203,7 +254,57 @@ export default class Controls {
 
 
             // animations
-            all: () => { },
+            all: () => {
+                this.sections = document.querySelectorAll(".section");
+                this.sections.forEach((section) => {
+
+                    if (section.classList.contains("right")) {
+                        GSAP.to(section, {
+                            borderTopLeftRadius: 10,
+                            scrollTrigger: {
+                                trigger: section,
+                                start: "top bottom",
+                                end: "top top",
+                                // markers: true,
+                                scrub: 0.6,
+                            }
+                        })
+
+                        GSAP.to(section, {
+                            borderBottomLeftRadius: 700,
+                            scrollTrigger: {
+                                trigger: section,
+                                start: "bottom bottom",
+                                end: "bottom top",
+                                // markers: true,
+                                scrub: 0.6,
+                            }
+                        })
+                    } else {
+                        GSAP.to(section, {
+                            borderTopRightRadius: 10,
+                            scrollTrigger: {
+                                trigger: section,
+                                start: "top bottom",
+                                end: "top top",
+                                // markers: true,
+                                scrub: 0.6,
+                            }
+                        })
+
+                        GSAP.to(section, {
+                            borderBottomRightRadius: 700,
+                            scrollTrigger: {
+                                trigger: section,
+                                start: "bottom bottom",
+                                end: "bottom top",
+                                // markers: true,
+                                scrub: 0.6,
+                            }
+                        })
+                    }
+                })
+            },
         })
     }
 
@@ -229,12 +330,12 @@ export default class Controls {
 
     update() {
         // camera helper curver
-        this.lerp.current = GSAP.utils.interpolate(
-            this.lerp.current,
-            this.lerp.target,
-            this.lerp.ease,
-        );
-        
+        // this.lerp.current = GSAP.utils.interpolate(
+        //     this.lerp.current,
+        //     this.lerp.target,
+        //     this.lerp.ease,
+        // );
+
         // camera curver
         // this.curve.getPointAt(this.lerp.current % 1, this.position);
         // this.camera.orthographicCamera.position.copy(this.position);

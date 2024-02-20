@@ -61,7 +61,6 @@ html{
 body{
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
-  background: var(--body-color);
   color: var(--text-color);
 }
 
@@ -373,13 +372,115 @@ button{
   padding: 1rem 2rem;
 }
 
-/*=============== CONTACT US ===============*/
-.contact {
+/*=============== COFFEES ===============*/
+.coffees {
   background-color: #fff;
 }
 
 /*=============== FOOTER ===============*/
+.footer {
+  background-color: #111235;
+}
 
+.footer__container{
+  row-gap: 2rem;
+  padding: 4rem 0;
+}
+
+.footer__logo{
+  display: flex;
+  align-items: center;
+  column-gap: .5rem;
+  margin-bottom: 1rem;
+  font-weight: var(--font-medium);
+  color: #fff;
+}
+
+.footer__description{
+  margin-bottom: 2.5rem;
+  color: #fff;
+  opacity: 80%;
+}
+
+.footer__social{
+  display: flex;
+  column-gap: .75rem;
+}
+
+.footer__social-link{
+  display: inline-flex;
+  background: var(--container-color);
+  padding: .25rem;
+  border-radius: .25rem;
+  color: var(--title-color);
+  font-size: 1rem;
+}
+
+.footer__social-link:hover{
+  background: var(--body-color);
+}
+
+.footer__title{
+  font-size: var(--h3-font-size);
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.footer__links{
+  display: grid;
+  row-gap: .35rem;
+}
+
+.footer__link{
+  font-size: var(--small-font-size);
+  color: #fff;
+  transition: .3s;
+  opacity: 60%;
+  font-weight: 300;
+}
+
+.footer__link:hover{
+  opacity: 1;
+}
+
+.footer__copy{
+  display: block;
+  text-align: center;
+  font-size: var(--smaller-font-size);
+  margin-top: 4.5rem;
+  padding-bottom: 3rem;
+  color: #fff;
+  opacity: 60%;
+}
+
+/*=============== SCROLL UP ===============*/
+.scrollup{
+  position: fixed;
+  background: var(--container-color);
+  right: 1rem;
+  /* bottom: -20%; */
+  display: inline-flex;
+  padding: .3rem;
+  border-radius: .25rem;
+  z-index: 100000000000;
+  opacity: .8;
+  transition: .4s;
+}
+
+.scrollup__icon{
+  font-size: 1.25rem;
+  color: var(--title-color);
+}
+
+.scrollup:hover{
+  background: var(--container-color);
+  opacity: 1;
+}
+
+/* Show Scroll Up*/
+/* .show-scroll{
+  bottom: 3rem;
+} */
 
 /*=============== MEDIA QUERIES ===============*/
 @media screen and (min-width: 1024px) {
@@ -440,10 +541,22 @@ button{
     top: auto;
     bottom: 2rem;
   }
+
+  .footer__container{
+    grid-template-columns: repeat(4, 1fr);
+    justify-items: center;
+    column-gap: 1rem;
+  }
 }
 
 @media screen and (min-width: 1192px){
   .container {
     margin-inline: auto;
+  }
+
+  .products__content,
+  .coffees__container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
   }
 }
