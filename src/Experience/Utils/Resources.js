@@ -27,12 +27,17 @@ export default class Resources extends EventEmitter{
         this.loaders.dracoLoader = new DRACOLoader();
         this.loaders.dracoLoader.setDecoderPath("/draco/");
         this.loaders.gltfLoader.setDRACOLoader(this.loaders.dracoLoader);
+        this.loaders.textureLoader = new THREE.TextureLoader();
     }
 
     startLoading() {
         for(const asset of this.assets) {
             if(asset.type === "glbModel") {
                 this.loaders.gltfLoader.load(asset.path, (file) => {
+                    this.singleAssetLoaded(asset, file);
+                })
+            } else if(asset.type === "imageTexture") {
+                this.loaders.textureLoader.load(asset.path, (file) => {
                     this.singleAssetLoaded(asset, file);
                 })
             }
