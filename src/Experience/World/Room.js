@@ -2,10 +2,6 @@ import * as THREE from "three";
 import Experience from "../Experience.js";
 import GSAP from "gsap";
 
-import AreaLigth from "./Lights/AreaLight.js";
-import PointLigth from "./Lights/PointLight.js";
-import PointLigth2 from "./Lights/PointLight2.js";
-
 export default class Room {
     constructor() {
         this.experience = new Experience();
@@ -14,9 +10,6 @@ export default class Room {
         this.room = this.resources.items.room;
         this.actualRoom = this.room.scene;
         this.roomChildren = {};
-        this.areaLight = new AreaLigth();
-        this.pointLight1 = new PointLigth();
-        this.pointLight2 = new PointLigth2();
 
         this.lerp = {
             current: 0,
@@ -30,7 +23,7 @@ export default class Room {
 
     setModel() {
         this.actualRoom.children.forEach((child) => {
-            // console.log(child);
+            console.log(child);
 
             child.castShadow = true;
             child.receiveShadow = true;
@@ -42,26 +35,21 @@ export default class Room {
                 })
             }
 
-            if (child.name === "Plane004") {
-                child.children[4].material = new THREE.MeshPhysicalMaterial();
-                child.children[4].material.roughness = 0;
-                child.children[4].material.color.set(0xE7AF70);
-                child.children[4].material.ior = 3;
-                child.children[4].material.transmission = 1;
-                child.children[4].material.opacity = .1;
+            this.actualRoom.texture = this.resources.items.roomtexture;
+            this.actualRoom.texture.encoding = THREE.sRGBEncoding;
+            this.actualRoom.texture.flipY = false;
 
-                child.children[5].material = new THREE.MeshPhysicalMaterial();
-                child.children[5].material.roughness = 0;
-                child.children[5].material.color.set(0xE7AF70);
-                child.children[5].material.ior = 3;
-                child.children[5].material.transmission = 1;
-                child.children[5].material.opacity = .1;
+            this.actualRoom.material = new THREE.MeshBasicMaterial({
+                map: this.actualRoom.texture,
+            })
+
+            if(child instanceof THREE.Mesh) {
+                child.material = this.actualRoom.material
             }
         })
 
         this.scene.add(this.actualRoom);
         this.actualRoom.scale.set(0.3, 0.3, 0.3);
-        // this.actualRoom.position.x = 0.8
     }
 
     onMouseMove() {
